@@ -5,6 +5,9 @@ NetId(s): prp12
 Date: 4/24/20
 """
 
+import math
+import random
+
 def transitionProbabilityMatrix(text):
 	# Initialize letters array
 	letters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
@@ -79,10 +82,48 @@ def decode(mapping, cyphertext):
 	decoded = ''
 	# Loop over characters in coded text and set in decoded based on the mapping
 	for index in range(len(coded)):
-		letter = ord(coded[index])-97
-		decoded = decoded + mapping[letter]
+		letter = coded[index]
+		letterIndex = ord(letter)-97
+		if letterIndex>0 and letterIndex<26:
+			decoded = decoded + mapping[letter]
+		else:
+			# Keep other characters that are not letters the same
+			decoded = decoded + letter
 
 	return decoded
+
+def mappingGenerator():
+	# Create a list of letters and shuffle it
+	letters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
+	mapping = random.shuffle(letters)
+	return mapping
+
+def mh_step(currentMapping, currentLikelihood)
+	proposedMapping = switch(currentMapping)
+	proposedLikelihood = logLikelihood(proposedMapping)
+	ratio = proposedLikelihood/currentLikelihood
+	if ratio>1:
+		return (proposedMapping,proposedLikelihood)
+	else:
+		rand = random.random()
+		if rand<ratio:
+			return (proposedMapping,proposedLikelihood)
+
+	return (currentMapping, currentLikelihood)
+
+def switch(mapping):
+	# Generate 2 random distinct indices to swap
+	index1 = random.randrange(0,26)
+	index2 = random.randrange(0,26)
+	while index2==index1:
+		index2 = random.randrange(0,26)
+	# Make a new list and apply the swap to it
+	newMapping = mapping.copy()
+	newMapping[index1] = mapping[index2]
+	newMapping[index2] = mapping[index1]
+
+	return newMapping
+
 
 
 
