@@ -14,8 +14,8 @@ def transitionProbabilityMatrix(text):
 	# Reset reading position
 	text.seek(0)
 
-	# Initialize transition probability matrix
-	trans = [[0]*27 for x in range(27)]
+	# Initialize transition probability matrix with 1's to avoid a probability of 0
+	trans = [[1]*27 for x in range(27)]
 
 	# Loop over the lines in text
 	for line in text:
@@ -33,7 +33,7 @@ def transitionProbabilityMatrix(text):
 					trans[ord(first)-97][26]+=1
 				elif (second in letters):
 					trans[26][ord(second)-97]+=1
-					
+
 	# Normalize each row
 	count = 0
 	for row in trans:
@@ -71,6 +71,20 @@ def transitionProbabilityMatrix(text):
 
 	return trans
 
+def decode(mapping, cyphertext):
+	# Initialize coded text and set to lowercase
+	coded = cyphertext
+	coded = coded.lower
+	# Initialize decoded text
+	decoded = ''
+	# Loop over characters in coded text and set in decoded based on the mapping
+	for index in range(len(coded)):
+		letter = ord(coded[index])-97
+		decoded = decoded + mapping[letter]
+
+	return decoded
+
+
 
 
 
@@ -82,5 +96,5 @@ if __name__ == '__main__':
 	warAndPeace = open('WarAndPeace.txt', 'r')
 
 	matrix = transitionProbabilityMatrix(warAndPeace)
-	print(matrix)
+	print(matrix[16][20])
 
