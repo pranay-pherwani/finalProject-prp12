@@ -8,6 +8,8 @@ Date: 4/24/20
 import math
 import random
 
+P = 
+
 def transitionProbabilityMatrix(text):
 	# Initialize letters array
 	letters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
@@ -90,7 +92,7 @@ def frequencyVector(text):
 					P[ord(line[i])-97]+=1
 	# Normalize P
 	P = [float(i)/sum(P) for i in P]
-	
+
 	return P
 
 
@@ -114,7 +116,16 @@ def decode(mapping, cyphertext):
 
 	return decoded
 
-def logLikelihood(mapping):
+def logLikelihood(mapping, cyphertext, P, M):
+	decoded = decode(mapping, cyphertext)
+	logLike = 0
+	logLike+= math.log(P[ord(y[0])-97])
+	for i in range(len(decoded)-1):
+		logLike+=math.log(M[ord(decoded[i])-97][ord(decoded[i+1])-97])
+
+	return logLike
+
+
 
 
 def mappingGenerator():
@@ -123,9 +134,9 @@ def mappingGenerator():
 	mapping = random.shuffle(letters)
 	return mapping
 
-def mh_step(currentMapping, currentLikelihood, cyphertext)
+def mh_step(currentMapping, currentLikelihood, cyphertext, P, M)
 	proposedMapping = switch(currentMapping)
-	proposedLikelihood = logLikelihood(proposedMapping, cyphertext)
+	proposedLikelihood = logLikelihood(proposedMapping, cyphertext, P, M)
 	ratio = proposedLikelihood/currentLikelihood
 	if ratio>1:
 		return (proposedMapping,proposedLikelihood)
@@ -155,13 +166,16 @@ def encrypt(text):
 	encrypted = decode(mapping,text)
 	return encrypted
 
-def decrypt(control, cyphertext, iterations):
+def decrypt(reference, cyphertext, iterations):
+	# Calculate frequency vector and transition matrix
+	P = frequencyVector(reference)
+	M = transitionProbabilityMatrix(reference)
 	# Get intial mapping and likelihood
 	mapping = mappingGenerator()
-	likelihood = logLikelihood(initialMapping, cyphertext)
+	likelihood = logLikelihood(initialMapping, cyphertext, P, M)
 	# Computed the mh_step for the desired number of iterations
 	for i in range(iterations)
-		(mapping,likelihood) = mh_step(mapping,likelihood, cyphertext)
+		(mapping,likelihood) = mh_step(mapping,likelihood, cyphertext, P, M)
 	# return the decoded text
 	return decode(mapping, cyphertext)
 
