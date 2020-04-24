@@ -124,8 +124,21 @@ def switch(mapping):
 
 	return newMapping
 
+def encrypt(text):
+	# Generate a random mapping and "decode" the real text 
+	mapping = mappingGenerator()
+	encrypted = decode(mapping,text)
+	return encrypted
 
-
+def decrypt(control, cyphertext, iterations):
+	# Get intial mapping and likelihood
+	mapping = mappingGenerator()
+	likelihood = logLikelihood(initialMapping)
+	# Computed the mh_step for the desired number of iterations
+	for i in range(iterations)
+		(mapping,likelihood) = mh_step(mapping,likelihood)
+	# return the decoded text
+	return decode(mapping, cyphertext)
 
 
 
