@@ -74,6 +74,28 @@ def transitionProbabilityMatrix(text):
 
 	return trans
 
+def frequencyVector(text):
+	# Initialize letters array
+	letters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
+	# Initialize frequency vector
+	P = [0]*26
+	# Ensure the text reads at the beginning
+	text.seek(0)
+	# Loop over the lines in text
+	for line in text:
+			# Loop over the characters in a line of text
+			# Increment frequency of the letter being read
+			for i in range(len(line)):
+				if line[i] in letters:
+					P[ord(line[i])-97]+=1
+	# Normalize P
+	P = [float(i)/sum(P) for i in P]
+	
+	return P
+
+
+
+
 def decode(mapping, cyphertext):
 	# Initialize coded text and set to lowercase
 	coded = cyphertext
@@ -92,15 +114,18 @@ def decode(mapping, cyphertext):
 
 	return decoded
 
+def logLikelihood(mapping):
+
+
 def mappingGenerator():
 	# Create a list of letters and shuffle it
 	letters = [chr(x) for x in range(ord('a'), ord('z') + 1)]
 	mapping = random.shuffle(letters)
 	return mapping
 
-def mh_step(currentMapping, currentLikelihood)
+def mh_step(currentMapping, currentLikelihood, cyphertext)
 	proposedMapping = switch(currentMapping)
-	proposedLikelihood = logLikelihood(proposedMapping)
+	proposedLikelihood = logLikelihood(proposedMapping, cyphertext)
 	ratio = proposedLikelihood/currentLikelihood
 	if ratio>1:
 		return (proposedMapping,proposedLikelihood)
@@ -133,10 +158,10 @@ def encrypt(text):
 def decrypt(control, cyphertext, iterations):
 	# Get intial mapping and likelihood
 	mapping = mappingGenerator()
-	likelihood = logLikelihood(initialMapping)
+	likelihood = logLikelihood(initialMapping, cyphertext)
 	# Computed the mh_step for the desired number of iterations
 	for i in range(iterations)
-		(mapping,likelihood) = mh_step(mapping,likelihood)
+		(mapping,likelihood) = mh_step(mapping,likelihood, cyphertext)
 	# return the decoded text
 	return decode(mapping, cyphertext)
 
