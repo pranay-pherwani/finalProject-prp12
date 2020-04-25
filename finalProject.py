@@ -241,18 +241,29 @@ mapping:						the mapping that decrypts the text
 decode(mapping, cyphertext):	the decrypted text
 """
 def decrypt(reference, cyphertext, iterations):
-	# Calculate frequency vector and transition matrix
-	P = frequencyVector(reference)
-	M = transitionProbabilityMatrix(reference)
-	# Get intial mapping and likelihood
-	mapping = mappingGenerator()
-	likelihood = logLikelihood(mapping, cyphertext, P, M)
-	# Computed the mh_step for the desired number of iterations
-	for i in range(iterations):
-		(mapping,likelihood) = mh_step(mapping,likelihood, cyphertext, P, M)
-	# return the decoded text
-	return (mapping,decode(mapping, cyphertext))
+	# Initialize lists of 20 mappings and their likelihoods
+	Mappings = [0]*20
+	Likelihoods = [0]*20
 
+	# Run the algorithm 20 times and record the final mapping and it's likelihood
+	# in the lists
+	for x in range(20):
+		# Calculate frequency vector and transition matrix
+		P = frequencyVector(reference)
+		M = transitionProbabilityMatrix(reference)
+		# Get intial mapping and likelihood
+		mapping = mappingGenerator()
+		likelihood = logLikelihood(mapping, cyphertext, P, M)
+		# Computed the mh_step for the desired number of iterations
+		for i in range(iterations):
+			(mapping,likelihood) = mh_step(mapping,likelihood, cyphertext, P, M)
+		Mappings[x] = mapping
+		Likelihoods[x] = likelihood
+	# Find the mapping with the greatest likelihood
+	maxIndex = Likelihoods.index(max(Likelihoods))
+	finalMapping = Mappings[maxIndex]
+	# return the decoded text
+	return (finalMapping,decode(finalMapping, cyphertext))
 
 
 """
@@ -274,7 +285,7 @@ if __name__ == '__main__':
 	# Encrypts the string
 	encrypted = encrypt(plain_text)
 	# Decrypts the string
-	(mapping, decrypted) = decrypt(warAndPeace, encrypted, 10000)
+	(mapping, decrypted) = decrypt(warAndPeace, encrypted, 1000)
 	# Prints information
 	print('ENCRYPTED:')
 	print(encrypted)
