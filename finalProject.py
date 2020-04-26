@@ -242,12 +242,12 @@ decode(mapping, cyphertext):	the decrypted text
 """
 def decrypt(reference, cyphertext, iterations):
 	# Initialize lists of 20 mappings and their likelihoods
-	Mappings = [0]*20
-	Likelihoods = [0]*20
+	Mappings = [0]*5
+	Likelihoods = [0]*5
 
 	# Run the algorithm 20 times and record the final mapping and it's likelihood
 	# in the lists
-	for x in range(20):
+	for x in range(5):
 		# Calculate frequency vector and transition matrix
 		P = frequencyVector(reference)
 		M = transitionProbabilityMatrix(reference)
@@ -285,7 +285,7 @@ if __name__ == '__main__':
 	# Encrypts the string
 	encrypted = encrypt(plain_text)
 	# Decrypts the string
-	(mapping, decrypted) = decrypt(warAndPeace, encrypted, 1000)
+	(mapping, decrypted) = decrypt(warAndPeace, encrypted, 10000)
 	# Prints information
 	print('ENCRYPTED:')
 	print(encrypted)
